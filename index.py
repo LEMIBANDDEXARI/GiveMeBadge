@@ -115,14 +115,17 @@ while True:
 
 
 # This is used to save the token for the next time you run the bot
-with open("config.json", "w") as f:
-    # Check if 'token' key exists in the config.json file
-    config["token"] = token
-
-    # This dumps our working setting to the config.json file
-    # Indent is used to make the file look nice and clean
-    # If you don't want to indent, you can remove the indent=2 from code
-    json.dump(config, f, indent=2)
+try:
+    if os.path.exists("config.json") and os.access("config.json", os.W_OK):
+        with open("config.json", "w") as f:
+            config["token"] = token
+            json.dump(config, f, indent=2)
+    else:
+        print("The 'config.json' file does not exist or is not writable.")
+except OSError as e:
+    print("Error opening file :", e)
+except Exception as e:
+    print("Another error has occurred :", e)
 
 
 class FunnyBadge(Client):
